@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import HeroSection from './Pages/index'
+import Router from './Components/Routes/index'
 
 function App() {
   
@@ -8,7 +8,7 @@ function App() {
   return (
     <>
      
-     <HeroSection />
+     <Router />
     </>
   )
 }
