@@ -4,7 +4,7 @@ import { Button } from "../Components/Ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "../Components/Ui/Card";
 import { Badge } from "../Components/Ui/Badge";
 import { Timer, Trophy, Code, Play, RotateCcw, CheckCircle } from "lucide-react";
-// import { useToast } from "@/hooks/use-toast";
+import { useToast } from "../Hooks/use-toast";
 
 const challenges = [
   {
@@ -35,25 +35,214 @@ const challenges = [
     timeLimit: 300,
   },
 ];
+
+const leaderboard = [
+  { name: "Shivam", time: "1:23", challenge: "Missing Button Styles" },
+  { name: "Aman", time: "2:45", challenge: "Broken Flexbox Layout" },
+  { name: "Ram", time: "4:12", challenge: "React State Bug" },
+  { name: "Sita", time: "1:56", challenge: "Missing Button Styles" },
+];
+
 function SpeedrunChallenge() {
-    const formatTime = (second)=>{
-        const mins=Math.floor(second/60)
-        const sec= (second%60).toString().padStart(2, '0');
-        return `${mins} : ${sec}`
+  const [selectedChallenge, setSelectedChallenge]=useState(null);
+  const [userCode, setUserCode]=useState('');
+  const [timeLeft, setTimeLeft]=useState(0);
+  const [isRunning, setIsRunning]=useState(false);
+  const [isCompleted, setIsCompleted]=useState(false);
+  const [completionTime, setCompletionTime]=useState(0);
+  const { toast } = useToast();
+  
+  useEffect(() => {
+    let interval;
+
+    if (isRunning && timeLeft > 0) {
+      interval = setInterval(() => {
+        setTimeLeft((time) => {
+          if (time <= 1) {
+            setIsRunning(false);
+            toast({
+              title: "Time's up!",
+              description: "Better luck next time!",
+              variant: "destructive",
+            });
+            return 0;
+          }
+          return time - 1;
+        });
+      }, 1000);
     }
 
-    const getDifficultyColor = (difficulty)=>{
-        switch(difficulty){
-            case 'Easy' : 
-                return "bg-green-500/10 text-green-500 border-green-500/30";
-            case 'Medium' :
-                return  "bg-yellow-500/10 text-yellow-500 border-yellow-500/30";
-            case 'Hard' : 
-                return "bg-red-500/10 text-red-500 border-red-500/30";
-            default : 
-                return "bg-gray-500/10 text-gray-500 border-gray-500/30";        
-        }
+    return () => clearInterval(interval);
+  }, [isRunning, timeLeft, toast]);
+  
+  const checkSolution = () => {
+    if (!selectedChallenge) return;
+    
+    // Simple check - in a real app, you'd have more sophisticated checking
+    const userCodeNormalized = userCode.replace(/\s+/g, ' ').trim();
+    const fixedCodeNormalized = selectedChallenge.fixedCode.replace(/\s+/g, ' ').trim();
+    
+    if (userCodeNormalized === fixedCodeNormalized) {
+      setIsCompleted(true);
+      setIsRunning(false);
+      const timeTaken = selectedChallenge.timeLimit - timeLeft;
+      setCompletionTime(timeTaken);
+      
+      toast({
+        title: "Congratulations!",
+        description: `Challenge completed in ${Math.floor(timeTaken / 60)}:${(timeTaken % 60).toString().padStart(2, '0')}!`,
+      });
+    } else {
+      toast({
+        title: "Not quite right",
+        description: "Keep trying! Check your solution carefully.",
+        variant: "destructive"
+      });
     }
+  };
+
+  const formatTime = (second)=>{
+    const mins=Math.floor(second/60)
+    const sec= (second%60).toString().padStart(2, '0');
+    return `${mins} : ${sec}`
+  }
+
+  const getDifficultyColor = (difficulty)=>{
+      switch(difficulty){
+          case 'Easy' : 
+            return "bg-green-500/10 text-green-500 border-green-500/30";
+          case 'Medium' :
+            return  "bg-yellow-500/10 text-yellow-500 border-yellow-500/30";
+          case 'Hard' : 
+            return "bg-red-500/10 text-red-500 border-red-500/30";
+          default : 
+            return "bg-gray-500/10 text-gray-500 border-gray-500/30";        
+      }
+  }
+
+  const startChallenge = (challenge)=>{
+    setSelectedChallenge(challenge);
+    setUserCode(challenge?.brokenCode);
+    setTimeLeft(challenge?.timeLimit);
+    setIsRunning(true);
+    setIsCompleted(false);
+    setCompletionTime(0);
+  }
+
+  const resetChallenge = ()=>{
+    setSelectedChallenge(null);
+    setUserCode("");
+    setTimeLeft(0);
+    setIsRunning(false);
+    setIsCompleted(false);
+    setCompletionTime(0);
+  }
+
+
+
+ if (selectedChallenge) {
+    return (
+      <div className="min-h-screen bg-background p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                {selectedChallenge.title}
+              </h1>
+              <p className="text-muted-foreground mt-2">{selectedChallenge.description}</p>
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <div className={`flex items-center gap-2 px-4 py-2 rounded-lg ${
+                timeLeft <= 30 ? 'bg-red-500/10 text-red-500' : 'bg-primary/10 text-primary'
+              }`}>
+                <Timer className="w-4 h-4" />
+                <span className="font-mono text-lg">{formatTime(timeLeft)}</span>
+              </div>
+              
+              <Button onClick={resetChallenge}  variant="outline" size="sm">
+                <RotateCcw className="w-4 h-4 mr-2" />
+                Reset
+              </Button>
+            </div>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Code className="w-5 h-5" />
+                  Live Editor
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <textarea
+                  value={userCode}
+                  onChange={(e) => setUserCode(e.target.value)}
+                  className="w-full h-96 p-4 border rounded-lg bg-secondary/30 font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+                  placeholder="Fix the broken code here..."
+                />
+                
+                <div className="flex gap-3 mt-4">
+                  <Button 
+                    onClick={checkSolution} 
+                    disabled={!isRunning || isCompleted}
+                    className="flex-1"
+                  >
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    Check Solution
+                  </Button>
+                  
+                  {/* {isCompleted && (
+                    <Badge variant="default" className="bg-green-500/10 text-green-500 border-green-500/30 px-4 py-2">
+                      <Trophy className="w-4 h-4 mr-2" />
+                      Completed in {formatTime(completionTime)}!
+                    </Badge>
+                  )} */}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Play className="w-5 h-5" />
+                  Preview
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="border rounded-lg p-4 bg-white min-h-96">
+                  <iframe
+                    srcDoc={`
+                      <!DOCTYPE html>
+                      <html>
+                        <head>
+                          <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+                          <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+                          <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+                        </head>
+                        <body>
+                          <div id="root"></div>
+                          <script type="text/babel">
+                            ${userCode.includes('function') ? userCode + '\nReactDOM.render(<Counter />, document.getElementById("root"));' : ''}
+                          </script>
+                          ${!userCode.includes('function') ? userCode : ''}
+                        </body>
+                      </html>
+                    `}
+                    className="w-full h-96 border-0"
+                    title="Code Preview"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-6xl mx-auto">
@@ -101,6 +290,7 @@ function SpeedrunChallenge() {
           </div>
 
           <div>
+           {/* leader boarcard show  */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -108,7 +298,7 @@ function SpeedrunChallenge() {
                   Leaderboard
                 </CardTitle>
               </CardHeader>
-              {/* <CardContent>
+             <CardContent>
                 <div className="space-y-3">
                   {leaderboard.map((entry, index) => (
                     <div key={index} className="flex items-center justify-between p-3 bg-secondary/30 rounded-lg">
@@ -123,9 +313,10 @@ function SpeedrunChallenge() {
                     </div>
                   ))}
                 </div>
-              </CardContent> */}
+              </CardContent> 
             </Card>
 
+            {/* how to work card  */}
             <Card className="mt-6">
               <CardHeader>
                 <CardTitle>How It Works</CardTitle>
