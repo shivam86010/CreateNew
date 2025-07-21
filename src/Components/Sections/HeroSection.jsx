@@ -76,7 +76,7 @@ const HeroSection = ({
             <DropdownMenuContent align="start" className="w-56">
               <DropdownMenuItem onClick={()=>navigate('/speedrunchallenge')} > <Timer className="w-4 h-4 mr-2" /> Speedrun Challenge </DropdownMenuItem>
               <DropdownMenuItem > <Brain className="w-4 h-4 mr-2" /> Interview Questions </DropdownMenuItem>
-              <DropdownMenuItem > <Wrench className="w-4 h-4 mr-2" /> SaaS Tools </DropdownMenuItem>
+              <DropdownMenuItem onClick={()=>navigate('/saastools')} > <Wrench className="w-4 h-4 mr-2" /> SaaS Tools </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
