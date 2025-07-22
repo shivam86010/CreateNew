@@ -2,8 +2,6 @@ import React, { forwardRef } from "react";
 
 const Input = React.forwardRef(({className, type , ...props }, ref) => {
 
-  console.log("classname: ",className);
-  
   return (
     <input 
       type={type}

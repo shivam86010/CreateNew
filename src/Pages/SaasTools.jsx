@@ -21,8 +21,40 @@ import {
 import { useToast } from "../Hooks/use-toast";
 export default function SaasTools() {
   const { toast } = useToast();
+
+  // Color Palette Generator State
   const [colorPalette, setColorPalette] = useState([]);
   const [baseColor, setBaseColor] = useState("#3b82f6");
+
+  //for Notepad State
+  const [savedNotes, setSavedNotes] = useState([]);
+  const [notepadContent, setNotepadContent] = useState("");
+
+  // Markdown Previewer State
+  const [markdownText, setMarkdownText] = useState(`# Welcome to Markdown Previewer
+
+    ## Features
+    - **Bold text** and *italic text*
+    - [Links](https://example.com)
+    - \`inline code\` and code blocks
+    - Lists and more!
+
+    ### Code Example
+    \`\`\`javascript
+    function hello() {
+      console.log("Hello, world!");
+    }
+    \`\`\`
+
+    ### List Example
+    1. First item
+    2. Second item
+      - Nested item
+      - Another nested item
+
+    > This is a blockquote
+    > 
+    > It can span multiple lines`);
 
   //generate color function 
   const generateColorPalette = ()=>{
@@ -67,6 +99,29 @@ export default function SaasTools() {
     });
   };
 
+  const saveNote = () => {
+  
+  };
+
+  const loadNote = (note) => {
+  
+  };
+
+  const deleteNote = (id) => {
+ 
+    
+  };
+
+  const downloadNote = () => {
+   
+  };
+
+  const markdownToHtml = (markdown) => {
+  
+    
+      
+  };
+
  
   return (
     <div className="min-h-screen bg-background p-6">
@@ -80,18 +135,18 @@ export default function SaasTools() {
           </p>
         </div>
         
-        <Tabs defaultValue="colors" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8">
-            <TabsTrigger value="colors" className="flex items-center gap-2">
-              <Palette className="w-4 h-4" />
+        <Tabs defaultValue="colors" className="!w-full">
+          <TabsList className="!grid !w-full !grid-cols-3 !mb-8">
+            <TabsTrigger value="colors" className="!flex !items-center !gap-2">
+              <Palette className="!w-4 !h-4" />
               Color Palette
             </TabsTrigger>
-            <TabsTrigger value="notepad" className="flex items-center gap-2">
-              <FileText className="w-4 h-4" />
+            <TabsTrigger value="notepad" className="!flex !items-center !gap-2">
+              <FileText className="!w-4 !h-4" />
               Smart Notepad
             </TabsTrigger>
-            <TabsTrigger value="markdown" className="flex items-center gap-2">
-              <Eye className="w-4 h-4" />
+            <TabsTrigger value="markdown" className="!flex !items-center !gap-2">
+              <Eye className="!w-4 !h-4" />
               Markdown Previewer
             </TabsTrigger>
           </TabsList>
@@ -179,6 +234,211 @@ export default function SaasTools() {
               </Card>
             </div>
           </TabsContent>
+
+          {/* Smart Notepad */}
+          <TabsContent value="notepad">
+            <div className="grid lg:grid-cols-3 gap-8">
+              <Card className="lg:col-span-2">
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Type className="w-5 h-5" />
+                      Smart Notepad
+                    </div>
+                    <div className="flex gap-2">
+                      <Button onClick={downloadNote} variant="outline" size="sm" disabled={!notepadContent}>
+                        <Download className="w-4 h-4 mr-2" />
+                        Download
+                      </Button>
+                      <Button onClick={saveNote} disabled={!notepadContent.trim()}>
+                        Save Note
+                      </Button>
+                    </div>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Textarea
+                    value={notepadContent}
+                    onChange={(e) => setNotepadContent(e.target.value)}
+                    placeholder="Start typing your note here... 
+                    Features:
+                    • Auto-save to local storage
+                    • Download as text file
+                    • Search through saved notes
+                    • No data sent to servers"
+                    className=" !min-h-96 !resize-none"
+                  />
+                  
+                  <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
+                    <span>{notepadContent.length} characters</span>
+                    <span>{notepadContent.split(/\s+/).filter(word => word.length > 0).length} words</span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Saved Notes ({savedNotes.length})</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3 max-h-96 overflow-y-auto">
+                    {savedNotes.map((note) => (
+                      <div key={note.id} className="border rounded-lg p-3 hover:bg-secondary/50 transition-colors">
+                        <div className="flex items-start justify-between mb-2">
+                          <h4 className="font-medium text-sm line-clamp-1">{note.title}</h4>
+                          <Button
+                            onClick={() => deleteNote(note.id)}
+                            variant="ghost"
+                            size="sm"
+                            className="h-auto p-1 text-destructive"
+                          >
+                            ×
+                          </Button>
+                        </div>
+                        <p className="text-xs text-muted-foreground mb-3">{note.date}</p>
+                        <Button
+                          onClick={() => loadNote(note)}
+                          variant="outline"
+                          size="sm"
+                          className="w-full"
+                        >
+                          Load Note
+                        </Button>
+                      </div>
+                    ))}
+                    
+                    {savedNotes.length === 0 && (
+                      <div className="text-center py-8 text-muted-foreground">
+                        <FileText className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                        <p className="text-sm">No saved notes yet</p>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Markdown Previewer */}
+          <TabsContent value="markdown">
+            <div className="grid lg:grid-cols-2 gap-8">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Hash className="w-5 h-5" />
+                    Markdown Editor
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Textarea
+                    value={markdownText}
+                    onChange={(e) => setMarkdownText(e.target.value)}
+                    placeholder="Type your markdown here..."
+                    className="!min-h-96 !font-mono !text-sm !resize-none"
+                  />
+                  
+                  <div className="flex items-center justify-between mt-4">
+                    <Badge variant="secondary">
+                      {markdownText.split('\n').length} lines
+                    </Badge>
+                    <Button
+                      onClick={() => copyToClipboard(markdownText)}
+                      variant="outline"
+                      size="sm"
+                    >
+                      <Copy className="w-4 h-4 mr-2" />
+                      Copy Markdown
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Eye className="w-5 h-5" />
+                    Live Preview
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div 
+                    className="prose prose-sm max-w-none min-h-96 p-4 border rounded-lg bg-secondary/20"
+                    dangerouslySetInnerHTML={{ __html: markdownToHtml(markdownText) }}
+                  />
+                  
+                  <div className="flex items-center justify-between mt-4">
+                    <Badge variant="secondary">
+                      Live Preview
+                    </Badge>
+                    <Button
+                      onClick={() => copyToClipboard(markdownToHtml(markdownText))}
+                      variant="outline"
+                      size="sm"
+                    >
+                      <Copy className="w-4 h-4 mr-2" />
+                      Copy HTML
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card className="mt-8">
+              <CardHeader>
+                <CardTitle>Markdown Cheatsheet</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-2 gap-6 text-sm">
+                  <div className="space-y-3">
+                    <div>
+                      <h4 className="font-medium mb-1">Headers</h4>
+                      <code className="text-xs bg-secondary/50 p-1 rounded">
+                        # H1, ## H2, ### H3
+                      </code>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-medium mb-1">Emphasis</h4>
+                      <code className="text-xs bg-secondary/50 p-1 rounded">
+                        **bold**, *italic*
+                      </code>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-medium mb-1">Links</h4>
+                      <code className="text-xs bg-secondary/50 p-1 rounded">
+                        [text](url)
+                      </code>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <div>
+                      <h4 className="font-medium mb-1">Code</h4>
+                      <code className="text-xs bg-secondary/50 p-1 rounded">
+                        `inline` or ```block```
+                      </code>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-medium mb-1">Lists</h4>
+                      <code className="text-xs bg-secondary/50 p-1 rounded">
+                        1. numbered, - bulleted
+                      </code>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-medium mb-1">Quotes</h4>
+                       <code className="text-xs bg-secondary/50 p-1 rounded">
+                         &gt; blockquote
+                       </code>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
         </Tabs>
     
     
