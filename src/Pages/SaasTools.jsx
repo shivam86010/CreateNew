@@ -18,9 +18,55 @@ import {
   Pipette
 } from "lucide-react"
 
+import { useToast } from "../Hooks/use-toast";
 export default function SaasTools() {
-    const [colorPalette, setColorPalette] = useState([]);
-    const [baseColor, setBaseColor] = useState("#3b82f6");
+  const { toast } = useToast();
+  const [colorPalette, setColorPalette] = useState([]);
+  const [baseColor, setBaseColor] = useState("#3b82f6");
+
+  //generate color function 
+  const generateColorPalette = ()=>{
+    const baseHex=baseColor.replace("#", ""); //remove # 
+    const r=parseInt(baseHex.substring(0, 2), 16); //convert hexadecimal to decimal
+    const g=parseInt(baseHex.substring(2, 4), 16);
+    const b=parseInt(baseHex.substring(4, 6), 10);
+    
+    const palette = [] ; //store all generated color variation 
+    const variations = [      //generate variations 
+      {name : "Base", factor : 1},
+      {name : "Light" , factor : 1.3},
+      {name : "Lighter" , factor : 1.6},
+      {name : "Dark" , factor : 0.7},
+      {name : "Darker", factor : 0.4},
+    ]
+
+    variations.forEach( variation => {
+      const newR = Math.min(255, Math.round(r*variation.factor));
+      const newG = Math.min(255, Math.round(g*variation.factor));
+      const newB = Math.min(255, Math.round(b*variation.factor));
+
+      const hex=`#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
+      palette.push(hex);
+    });
+
+    //add complementary color (opposite cycle of rgb)
+    const complementaryR = 255-r;
+    const complementaryG = 255-g;
+    const complementaryB = 255-b;
+    const complementary = `#${complementaryR.toString(16).padStart(2, '0')}${complementaryG.toString(16).padStart(2, '0')}${complementaryB.toString(16).padStart(2, '0')}`; 
+     palette.push(complementary);
+    setColorPalette(palette);
+  }
+  
+  //copy the clip 
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "Copied!",
+      description: "Color code copied to clipboard",
+    });
+  };
+
  
   return (
     <div className="min-h-screen bg-background p-6">
@@ -68,19 +114,19 @@ export default function SaasTools() {
                         type="color"
                         value={baseColor}
                         onChange={(e) => setBaseColor(e.target.value)}
-                        className="w-20 h-12 p-1 border rounded cursor-pointer"
+                        className="!w-20 !h-12 !p-1 !border !rounded !cursor-pointer"
                       />
                       <Input
                         type="text"
                         value={baseColor}
                         onChange={(e) => setBaseColor(e.target.value)}
                         placeholder="#3b82f6"
-                        className="flex-1"
+                        className="!flex-1"
                       />
                     </div>
                   </div>
                   
-                  <Button  className="w-full">
+                  <Button onClick={generateColorPalette}  className="w-full">
                     <RefreshCw className="w-4 h-4 mr-2" />
                     Generate Palette
                   </Button>
@@ -102,9 +148,9 @@ export default function SaasTools() {
                   <CardTitle>Generated Palette</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {/* {colorPalette.length > 0 ? (
+                  {colorPalette?.length > 0 ? (
                     <div className="grid grid-cols-2 gap-4">
-                      {colorPalette.map((color, index) => (
+                      {colorPalette?.map((color, index) => (
                         <div
                           key={index}
                           className="group cursor-pointer rounded-lg overflow-hidden border hover:scale-105 transition-transform"
@@ -128,7 +174,7 @@ export default function SaasTools() {
                       <Palette className="w-12 h-12 mx-auto mb-4 opacity-50" />
                       <p>Generate a palette to see colors here</p>
                     </div>
-                  )} */}
+                  )}
                 </CardContent>
               </Card>
             </div>

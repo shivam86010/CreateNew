@@ -1,24 +1,25 @@
-import React from "react";
+import React, { forwardRef } from "react";
 
-const Input = React.forwardRef(({ type = "text", style = {}, ...props }, ref) => {
-  const defaultStyle = {
-    height: "40px",
-    width: "100%",
-    border: "1px solid #ccc",
-    borderRadius: "6px",
-    background: "#fff",
-    padding: "0 12px",
-    fontSize: "1rem",
-    outline: "none",
-    transition: "border 0.2s, box-shadow 0.2s",
-    boxSizing: "border-box",
-  };
+const Input = React.forwardRef(({className, type , ...props }, ref) => {
 
+  console.log("classname: ",className);
+  
   return (
-    <input
+    <input 
       type={type}
       ref={ref}
-      style={{ ...defaultStyle, ...style }}
+      className={`flex h-10 w-full rounded-md border border-input 
+          bg-background px-3 py-2 text-base ring-offset-background 
+          file:border-0 file:bg-transparent file:text-sm 
+          file:font-medium file:text-foreground 
+          placeholder:text-muted-foreground 
+          focus-visible:outline-none focus-visible:ring-2 
+          
+          focus-visible:ring-ring focus-visible:ring-offset-2
+           disabled:cursor-not-allowed disabled:opacity-50 
+           md:text-sm ${className} `}
+
+           
       {...props}
     />
   );
@@ -27,3 +28,6 @@ const Input = React.forwardRef(({ type = "text", style = {}, ...props }, ref) =>
 Input.displayName = "Input";
 
 export { Input };
+
+
+
