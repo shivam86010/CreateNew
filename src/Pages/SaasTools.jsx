@@ -100,26 +100,69 @@ export default function SaasTools() {
   };
 
   const saveNote = () => {
-  
+    if (!notepadContent.trim()) return;
+    
+    const newNote = {
+      id: Date.now().toString(),
+      title: notepadContent.split('\n')[0].substring(0, 50) || "Untitled Note",
+      content: notepadContent,
+      date: new Date().toLocaleString()
+    };
+    
+    setSavedNotes(prev => [newNote, ...prev]);
+    setNotepadContent("");
+    
+    toast({
+      title: "Note saved!",
+      description: "Your note has been saved locally",
+    });
   };
 
   const loadNote = (note) => {
-  
+    setNotepadContent(note.content);
   };
 
   const deleteNote = (id) => {
- 
-    
+    setSavedNotes(prev => prev.filter(note => note.id !== id));
+    toast({
+      title: "Note deleted",
+      description: "Note has been removed",
+    });
   };
 
   const downloadNote = () => {
-   
+    const blob = new Blob([notepadContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'note.txt';
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
-  const markdownToHtml = (markdown) => {
-  
-    
-      
+    const markdownToHtml = (markdown) => {
+    return markdown
+      // Headers
+      .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+      .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+      .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+      // Bold
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      // Italic
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      // Links
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+      // Inline code
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      // Code blocks
+      .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
+      // Blockquotes
+      .replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>')
+      // Line breaks
+      .replace(/\n/g, '<br>')
+      // Lists
+      .replace(/^\d+\. (.*$)/gim, '<li>$1</li>')
+      .replace(/^- (.*$)/gim, '<li>$1</li>');
   };
 
  
