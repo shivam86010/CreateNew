@@ -83,6 +83,100 @@ const TicTacToe = () => {
 
 
 
+const MemoryGame = () => {
+  const [cards, setCards] = useState([]);
+  const [flipped, setFlipped] = useState([]);
+  const [matched, setMatched] = useState([]);
+  const [moves, setMoves] = useState(0);
+  const [gameStarted, setGameStarted] = useState(false);
+
+  const emojis = ['🎮', '🚀', '⭐', '🎯', '🔥', '💎', '🎨', '🎭'];
+
+  const initializeGame = () => {
+    const shuffled = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+    setCards(shuffled.map((_, index) => index));
+    setFlipped([]);
+    setMatched([]);
+    setMoves(0);
+    setGameStarted(true);
+  };
+
+  const handleCardClick = (index) => {
+    if (flipped.length === 2 || flipped.includes(index) || matched.includes(index)) return;
+
+    const newFlipped = [...flipped, index];
+    setFlipped(newFlipped);
+
+    if (newFlipped.length === 2) {
+      setMoves(moves + 1);
+      const [first, second] = newFlipped;
+      const firstEmoji = emojis[Math.floor(first / 2)];
+      const secondEmoji = emojis[Math.floor(second / 2)];
+
+      if (firstEmoji === secondEmoji) {
+        setMatched([...matched, first, second]);
+        setFlipped([]);
+      } else {
+        setTimeout(() => setFlipped([]), 1000);
+      }
+    }
+  };
+
+  const isGameWon = matched.length === 16 && gameStarted;
+
+  return (
+    <div className="space-y-4">
+      <div className="text-center space-y-2">
+        <div className="flex justify-center gap-4">
+          <Badge variant="secondary">Moves: {moves}</Badge>
+          {isGameWon && (
+            <Badge variant="default">
+              <Trophy className="w-4 h-4 mr-2" />
+              You Won!
+            </Badge>
+          )}
+        </div>
+      </div>
+
+      {!gameStarted ? (
+        <div className="text-center">
+          <Button onClick={initializeGame} variant="gaming" size="lg">
+            Start Memory Game
+          </Button>
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-4 gap-2 max-w-sm mx-auto">
+            {cards.map((cardIndex, index) => (
+              <Button
+                key={index}
+                variant="outline"
+                className="!h-16 !w-16 !text-2xl"
+                onClick={() => handleCardClick(index)}
+                disabled={flipped.includes(index) || matched.includes(index)}
+              >
+                {flipped.includes(index) || matched.includes(index) 
+                  ? emojis[Math.floor(cardIndex / 2)]
+                  : '❓'
+                }
+              </Button>
+            ))}
+          </div>
+          
+          <div className="text-center">
+            <Button onClick={initializeGame} variant="gaming">
+              <RotateCcw className="w-4 h-4 mr-2" />
+              New Game
+            </Button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+
+
 export default function OfflineGames() {
   const [activeGame, setActiveGame] = useState(null);
   const navigate = useNavigate();
@@ -100,7 +194,7 @@ export default function OfflineGames() {
       title: 'Memory Game',
       description: 'Match pairs of cards to test your memory',
       icon: '🧠',
-    //   component: <MemoryGame />
+      component: <MemoryGame />
     },
     {
       id: 'puzzle',
