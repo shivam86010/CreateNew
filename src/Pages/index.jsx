@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import HeroSection from "../Components/Sections/HeroSection";
-
+import {AboutSection} from "../Components/Sections/AboutSection "
 
 import {Button} from "../Components/Ui/Button";
 
@@ -169,7 +169,52 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      
+
+       
+       
+{/* Main Content */}
+      <div className="container mx-auto px-4 py-8 space-y-12">
+        {/* About Section */}
+        <section id="about-section">
+          <AboutSection
+            isUnlocked={unlockedLevels.includes(1)}
+            onUnlock={() => openQuiz(1)}
+          />
+        </section>
+
+        {/* Projects Section */}
+        {/* <section id="projects-section">
+          <ProjectsSection
+            isUnlocked={completedQuizzes.includes('level-1')}
+            onUnlock={() => openQuiz(2)}
+          />
+        </section> */}
+
+        {/* Live Coding Section */}
+        {/* <section id="coding-section">
+          <LiveCodingSection
+            isUnlocked={completedQuizzes.includes('level-2')}
+            onUnlock={() => openQuiz(3)}
+          />
+        </section> */}
+
+        {/* Digital Garden Section */}
+        {/* <section id="garden-section">
+          <DigitalGardenSection
+            isUnlocked={completedQuizzes.includes('level-3')}
+            onUnlock={() => openQuiz(4)}
+          />
+        </section> */}
+
+        {/* Contact Section */}
+        {/* <section id="contact-section">
+          <ContactSection
+            isUnlocked={completedQuizzes.includes('level-4')}
+            onUnlock={() => openQuiz(5)}
+          />
+        </section> */}
+      </div>
+
       
       <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-40">
         <Button variant="gaming" size="icon" className="rounded-full shadow-glow-primary">
@@ -181,6 +226,7 @@ const Index = () => {
           <ArrowUp className="w-4 h-4" />
         </Button>
       </div>
+
       <div className="fixed bottom-6 left-6 z-40">
         <Button onClick={() => {
           setGameStarted(false);

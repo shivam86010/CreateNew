@@ -2,31 +2,11 @@ import { useState, useEffect } from "react";
 import { Button } from "../Ui/Button";
 import { Badge } from "../Ui/Badge";
 import { ThemePicker } from "../../Components/ThemePicker";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../Ui/DropdownMenu";
-import {
-  Zap,
-  Terminal,
-  Gamepad2,
-  Sparkles,
-  Menu,
-  Timer,
-  Brain,
-  Wrench,
-} from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, } from "../Ui/DropdownMenu";
+import {Zap, Terminal, Gamepad2, Sparkles, Menu,Timer,Brain, Wrench,} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const HeroSection = ({
-  onStartGame,
-  currentTheme,
-  onThemeChange,
-  isGlitchMode,
-  onToggleGlitch,
-}) => {
+const HeroSection = ({ onStartGame, currentTheme, onThemeChange, isGlitchMode, onToggleGlitch, }) => {
   const [typedText, setTypedText] = useState("");
   const [showCursor, setShowCursor] = useState(true);
   const navigate=useNavigate();
