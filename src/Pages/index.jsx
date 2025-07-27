@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
 import HeroSection from "../Components/Sections/HeroSection";
 import {AboutSection} from "../Components/Sections/AboutSection "
-
 import {Button} from "../Components/Ui/Button";
-
-
-
-
 import { ArrowUp, Command, Mic, MicOff } from "lucide-react";
+import { GameProgress } from "../Components/GameProgress "
 
 const Index = () => {
   const [gameStarted, setGameStarted] = useState(false);
@@ -169,6 +165,14 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+
+      {/* Game Progress Indicator */}
+      <GameProgress
+        currentLevel={currentLevel}
+        totalLevels={5}
+        unlockedLevels={unlockedLevels}
+        completedQuizzes={completedQuizzes}
+      />
 
        
        
