@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import HeroSection from "../Components/Sections/HeroSection";
 import {AboutSection} from "../Components/Sections/AboutSection "
+import {CommandPalette} from '../Components/CommandPaletteopen'
 import {Button} from "../Components/Ui/Button";
 import { ArrowUp, Command, Mic, MicOff } from "lucide-react";
 import { GameProgress } from "../Components/GameProgress "
@@ -174,6 +175,23 @@ const Index = () => {
         completedQuizzes={completedQuizzes}
       />
 
+      {/* Command Palette */}
+      {/* <CommandPalette
+        isOpen={commandPaletteOpen}
+        onClose={() => setCommandPaletteOpen(false)}
+        onNavigate={handleCommandPaletteNavigate}
+        unlockedLevels={unlockedLevels}
+      /> */}
+
+      {/* Quiz Modal */}
+      {/* <QuizModal
+        isOpen={activeQuiz.isOpen}
+        onClose={() => setActiveQuiz(prev => ({ ...prev, isOpen: false }))}
+        onComplete={(passed) => handleQuizComplete(passed, activeQuiz.level)}
+        title={activeQuiz.title}
+        questions={activeQuiz.questions}
+      /> */}
+
        
        
 {/* Main Content */}
@@ -221,7 +239,9 @@ const Index = () => {
 
       
       <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-40">
-        <Button variant="gaming" size="icon" className="rounded-full shadow-glow-primary">
+        <Button 
+          // onClick={() => setCommandPaletteOpen(true)}
+          variant="gaming" size="icon" className="rounded-full shadow-glow-primary">
           <Command className="w-4 h-4" />
         </Button>
        
