@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../Components/Ui/Card";
 import { Button } from "../Components/Ui/Button";
 import { Badge } from "../Components/Ui/Badge";
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-// import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../Components/Ui/Tabs";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../Components/Ui/Collapsible";
 import { Brain, Code, Eye, EyeOff, Lightbulb, ChevronDown, ChevronRight } from "lucide-react";
 
 
@@ -300,7 +300,7 @@ export default function InterviewQuestions() {
         </div>
 
         {/* Questions */}
-        {/* <div className="space-y-6">
+        <div className="space-y-6">
           {filteredQuestions.map((question) => (
             <Card key={question.id} className="overflow-hidden">
               <Collapsible 
@@ -449,7 +449,7 @@ export default function InterviewQuestions() {
               </Collapsible>
             </Card>
           ))}
-        </div> */}
+        </div>
         
         {/* {filteredQuestions.length === 0 && (
           <div className="text-center py-12">
