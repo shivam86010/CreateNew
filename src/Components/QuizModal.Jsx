@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../Components/Ui/Dialog";
 import { Button } from "../Components/Ui/Button";
 // import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-// import { Label } from "@/components/ui/label";
+import { Label } from "../Components/Ui/Label";
 import { Progress } from "../Components/Ui/Progress";
 import { Trophy, X } from "lucide-react";
 
