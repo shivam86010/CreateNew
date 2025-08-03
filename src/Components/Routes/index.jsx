@@ -5,6 +5,7 @@ import SpeedrunChallenge from '../../Pages/SpeedrunChallenge';
 import SaasTools from '../../Pages/SaasTools';
 import OfflineGame from '../../Pages/OfflineGame'
 import InterviewQuestions from '../../Pages/InterviewQuestion';
+import PageNotFound from '../../Pages/PageNotFound'
 
 const index = () => {
   return (
@@ -14,6 +15,8 @@ const index = () => {
        <Route path='saastools' element={<SaasTools />} />
        <Route path='offlinegame' element={<OfflineGame />} />
        <Route path='interviewquestions' element={<InterviewQuestions />} />
+
+       <Route path="*" element={<PageNotFound />} />
    </Routes>
   )
 }
