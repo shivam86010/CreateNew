@@ -3,7 +3,7 @@ import { Button } from "../Ui/Button";
 import { Badge } from "../Ui/Badge";
 import { ThemePicker } from "../../Components/ThemePicker";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, } from "../Ui/DropdownMenu";
-import {Zap, Terminal, Gamepad2, Sparkles, Menu,Timer,Brain, Wrench,} from "lucide-react";
+import {Zap, Terminal, Gamepad2, Sparkles, Menu,Timer,Brain, Wrench,Mic } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const HeroSection = ({ onStartGame, currentTheme, onThemeChange, isGlitchMode, onToggleGlitch, }) => {
@@ -46,6 +46,17 @@ const HeroSection = ({ onStartGame, currentTheme, onThemeChange, isGlitchMode, o
 
       <div className="absolute top-6 left-6 right-6 flex justify-between items-center z-10">
         <div className="flex gap-3">
+
+          <Button 
+            // onClick={() => navigate("/personalized-interview")}
+            variant="gaming"
+            size="sm"
+            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+          >
+            <Mic className="w-4 h-4 mr-2" />
+            Personalized Interview
+          </Button>
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm">
